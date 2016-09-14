@@ -15,7 +15,6 @@ import UIKit
 class StateOperation: NSOperation {
     var id:Int!
     var delegate: StateOperationDelegate?
-    var didCanceled: Bool = false
     
     init(withID id: Int, delegate: StateOperationDelegate?) {
         super.init()
@@ -25,8 +24,21 @@ class StateOperation: NSOperation {
         
     }
     
+    
+    private var _finished : Bool = false
+    
+    override var finished : Bool {
+        get { return _finished }
+        set {
+            willChangeValueForKey("isFinished")
+            _finished = newValue
+            didChangeValueForKey("isFinished")
+        }
+    }
+    
     override func main() {
-        if self.didCanceled {
+        guard !self.cancelled else {
+            self.finished = true
             return
         }
         
@@ -34,7 +46,8 @@ class StateOperation: NSOperation {
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC)))
         dispatch_after(delayTime, dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
             
-            if self.didCanceled {
+            guard !self.cancelled else {
+                self.finished = true
                 return
             }
             
@@ -47,14 +60,5 @@ class StateOperation: NSOperation {
                 })
             }
         }
-        
-        
-       
-    }
-    
-    override func cancel() {
-        super.cancel()
-        
-        didCanceled = true
     }
 }
