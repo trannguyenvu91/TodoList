@@ -10,10 +10,8 @@ import UIKit
 
 class TodoViewCell: UITableViewCell {
 
+    @IBOutlet weak var cancelLabel: UILabel!
     @IBOutlet weak var label: UILabel!
-    @IBOutlet weak var btnCancel: UIButton!
-    @IBAction func btnCancelClicked(sender: AnyObject) {
-    }
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

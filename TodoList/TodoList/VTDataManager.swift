@@ -1,6 +1,6 @@
 //
 //  VTDataManager.swift
-//  GifGallery
+//  todoGallery
 //
 //  Created by Vince Tran on 8/1/16.
 //  Copyright © 2016 Vince Tran. All rights reserved.
@@ -24,66 +24,66 @@ class VTDataManager: NSObject {
     
     
     
-    //MARK: - GifModel
-    func gifEntityName() -> String {
+    //MARK: - todoModel
+    func todoEntityName() -> String {
         return "TodoModel"
     }
     
-    func gifModel(withID id:Int) -> TodoModel? {
+    func todoModel(withID id:Int) -> TodoModel? {
         //filter
         let predicate = NSPredicate(format: "id == \(id)", argumentArray: nil)
         
-        if let fetchedGifs = fetchedModels(withEntityName: gifEntityName(), predicate: predicate, sortDescriptors: nil) {
-            return fetchedGifs.last as? TodoModel
+        if let fetchedtodos = fetchedModels(withEntityName: todoEntityName(), predicate: predicate, sortDescriptors: nil) {
+            return fetchedtodos.last as? TodoModel
         } else {
             return nil
         }
     }
     
-    func insertOrUpdateGifModel(withID id:Int?) -> TodoModel {
+    func insertOrUpdatetodoModel(withID id:Int?) -> TodoModel {
         
-        if let modelID = id, model = self.gifModel(withID: modelID) {
+        if let modelID = id, model = self.todoModel(withID: modelID) {
             return model
         }
         
-        let gifModel = insertModel(withEntityName: gifEntityName()) as TodoModel
-        return gifModel
+        let todoModel = insertModel(withEntityName: todoEntityName()) as TodoModel
+        return todoModel
     }
     
-    func deleteGifModel(gifModel model:TodoModel) {
+    func deletetodoModel(todoModel model:TodoModel) {
         deleteModel(model)
     }
     
-    func deleteGifModel(withID id:Int) {
+    func deletetodoModel(withID id:Int) {
         //filter
         let predicate = NSPredicate(format: "id == \(id)", argumentArray: nil)
-        deleteAllInstances(withEntityName: gifEntityName(), predicate: predicate, sortDescriptors: nil)
+        deleteAllInstances(withEntityName: todoEntityName(), predicate: predicate, sortDescriptors: nil)
     }
     
-    func deleteAllGifModels() {
-        deleteAllInstances(withEntityName: gifEntityName(), predicate: nil, sortDescriptors: nil)
+    func deleteAlltodoModels() {
+        deleteAllInstances(withEntityName: todoEntityName(), predicate: nil, sortDescriptors: nil)
     }
     
     
-    func countGifModels() -> Int {
-        return countFetchedModels(withEntityName: gifEntityName(), predicate: nil, sortDescriptors: nil)
+    func counttodoModels() -> Int {
+        return countFetchedModels(withEntityName: todoEntityName(), predicate: nil, sortDescriptors: nil)
     }
     
-    //Return all gif model in collection
-    func gifModelsCollection() -> [TodoModel]? {
+    //Return all todo model in collection
+    func todoModelsCollection() -> [TodoModel]? {
         //filter
         let sortDesciptor = NSSortDescriptor(key: "id", ascending: false)
-        return fetchedModels(withEntityName: gifEntityName(), predicate: nil, sortDescriptors: [sortDesciptor])
+        return fetchedModels(withEntityName: todoEntityName(), predicate: nil, sortDescriptors: [sortDesciptor])
     }
     
     
     //Return fetched Controller, so that we can observe the changes
-    func gifModelsFetchedController(type: ListType) -> NSFetchedResultsController {
+    func todoModelsFetchedController(type: ListType) -> NSFetchedResultsController {
         let dateSort = NSSortDescriptor(key: "id", ascending: false)
         //filter
         let predicate = NSPredicate(format: "state == \(type.rawValue)", argumentArray: nil)
-        let gifController = fetchedController(withEntityName: gifEntityName(), predicate: predicate, sortDescriptors: [dateSort])
-        return gifController
+        let todoController = fetchedController(withEntityName: todoEntityName(), predicate: predicate, sortDescriptors: [dateSort])
+        return todoController
         
     }
     

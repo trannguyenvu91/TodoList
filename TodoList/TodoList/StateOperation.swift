@@ -15,8 +15,9 @@ import UIKit
 class StateOperation: NSOperation {
     var id:Int!
     var delegate: StateOperationDelegate?
+    var didCanceled: Bool = false
     
-    init(withID id: Int, delegate: StateOperationDelegate) {
+    init(withID id: Int, delegate: StateOperationDelegate?) {
         super.init()
         
         self.id = id
@@ -25,22 +26,19 @@ class StateOperation: NSOperation {
     }
     
     override func main() {
-        if self.cancelled {
+        if self.didCanceled {
             return
         }
         
-        print("test start")
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC)))
         dispatch_after(delayTime, dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
-            sync()
-            print("test end")
             
-            if self.cancelled {
+            if self.didCanceled {
                 return
             }
             
-            let model = VTDataManager.defaultManager.gifModel(withID: self.id)
+            let model = VTDataManager.defaultManager.todoModel(withID: self.id)
             model?.state = model?.state == 0 ? 1 : 0
             
             if self.delegate?.respondsToSelector(#selector(StateOperationDelegate.didFinishStateOperation(_:))) != nil {
@@ -54,5 +52,9 @@ class StateOperation: NSOperation {
        
     }
     
-    
+    override func cancel() {
+        super.cancel()
+        
+        didCanceled = true
+    }
 }

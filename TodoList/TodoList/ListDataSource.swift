@@ -42,7 +42,7 @@ class ListDataSource: NSObject {
     }
     
     func commonSetting() {
-        fetchedController = VTDataManager.defaultManager.gifModelsFetchedController(type)
+        fetchedController = VTDataManager.defaultManager.todoModelsFetchedController(type)
         
         fetchedController.delegate = self
         do {
@@ -106,8 +106,16 @@ extension ListDataSource: UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellID) as! TodoViewCell
         
-        if let gifModel = fetchedController.objectAtIndexPath(indexPath) as? TodoModel {
-            cell.label.text = gifModel.name
+        if let model = fetchedController.objectAtIndexPath(indexPath) as? TodoModel {
+            cell.label.text = model.name
+            
+            
+            if updateStateOperation[(model.id?.integerValue)!] != nil{
+                cell.cancelLabel.hidden = false
+            } else {
+                cell.cancelLabel.hidden = true
+                
+            }
         }
         
         return cell
@@ -132,9 +140,9 @@ extension ListDataSource: UITableViewDelegate {
                 updateStateOperation[(model.id?.integerValue)!] = operation
                 
             }
-            
-//            model.state = gifModel.state == 1 ? 0 : 1
         }
+        
+        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
     
     
@@ -148,13 +156,14 @@ extension ListDataSource: UITableViewDelegate {
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            if let gifModel = fetchedController.objectAtIndexPath(indexPath) as? TodoModel {
-                VTDataManager.defaultManager.deleteGifModel(gifModel: gifModel)
+            if let todoModel = fetchedController.objectAtIndexPath(indexPath) as? TodoModel {
+                VTDataManager.defaultManager.deletetodoModel(todoModel: todoModel)
             }
         }
     }
 }
 
+//MARK: - StateOperationDelegate
 extension ListDataSource: StateOperationDelegate {
     func didFinishStateOperation(operation: StateOperation) {
         updateStateOperation.removeValueForKey(operation.id)

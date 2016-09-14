@@ -1,6 +1,6 @@
 //
 //  ArbitraryHelper.swift
-//  GifGallery
+//  todoGallery
 //
 //  Created by Vince Tran on 8/9/16.
 //  Copyright © 2016 Vince Tran. All rights reserved.
