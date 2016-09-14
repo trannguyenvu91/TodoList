@@ -52,7 +52,7 @@ class StateOperation: NSOperation {
             }
             
             let model = VTDataManager.defaultManager.todoModel(withID: self.id)
-            model?.state = model?.state == 0 ? 1 : 0
+            model?.reverseState()
             
             if self.delegate?.respondsToSelector(#selector(StateOperationDelegate.didFinishStateOperation(_:))) != nil {
                 dispatch_async(dispatch_get_main_queue(), {

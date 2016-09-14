@@ -13,5 +13,8 @@ import CoreData
 class TodoModel: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
+    func reverseState() {
+        state = state == 0 ? 1 : 0
+    }
 
 }
